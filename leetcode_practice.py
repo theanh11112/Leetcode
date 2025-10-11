@@ -15,50 +15,31 @@ import numpy as np
 
 class Solution(object):
 
-    def convert(self, s, numRows):
+    def reverse(self, x):
         """
-        :type s: str
-        :type numRows: int
-        :rtype: str
+        :type x: int
+        :rtype: int
         """
-       
-        if numRows == 1:
-            return s 
-        else : 
-            colums = len(s) // (numRows + numRows -  2) * (numRows - 2 + 1 ) + (numRows - 2 + 1 ) 
-            matrix = np.zeros((numRows, colums), dtype=str)
-            row = 0 
-            col = 0 
-            cham = 0
-            for i in range(len(s)):
-                matrix[row][col] = s[i]
-                if cham < numRows - 1 : 
-                    row += 1 
-                    cham += 1
-                else : 
-                    row -= 1 
-                    col += 1
-                    if row == 0 : 
-                        cham = 0 
-            result = ""
-            for i in range(numRows):
-                for j in range(colums):
-                    if matrix[i][j] != 0 :
-                        result += matrix[i][j]
-                print(result)
-            return result   
-                     
-                
-       
-                
- 
-# ngoai ra bai toan con co the giai theo cach (khong can su dung ma tran de luu vao ban do zigzag ): 
-# su dung list de luu tung row ( moi row la mot string va neu co khoang trang hay khong thi no van tra ve ket qua nhu the)          
+        Int_Max = 2**31 -1 
+        Int_min = -2**31 
+        sign = 1 if x >= 0 else -1 
+        x = abs(x)
 
-# Input: s = "babad"
-# Output: "bab"
-# Explanation: "aba" is also a valid answer.
+        if x == 0 : 
+            return 0 
+        else :
+            res = 0 
+            while x > 0 :
+                digit = x % 10 
+                res = res * 10 + digit
+                if res < Int_min or res > Int_Max :
+                   return 0
+                x = x // 10 
+            return sign * res 
+            
 
+# lesson 7 leetcode : Reserve Interger : solution  =>  chia lay nguyen va chia lay du cho 10 
+# tim hieu toi uu bai toan thi sau moi lan them duoc so moi vao trong vao so hien tai thi len check xem da overflow chua 
     
 
     
@@ -67,6 +48,6 @@ class Solution(object):
 if __name__ == "__main__":
     # Tạo object 
     solution = Solution()
-    solution.convert("PAYPALISHIRING", 3)
+    print(solution.reverse(-123))
     
     
