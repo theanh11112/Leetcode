@@ -10,40 +10,50 @@ Hướng dẫn:
 """
 
 from typing import List
+import numpy as np
 
 
 class Solution(object):
 
-    def longestPalindrome(self, s):
+    def convert(self, s, numRows):
         """
         :type s: str
+        :type numRows: int
         :rtype: str
         """
-        a , b = 0 , 0 
-        substring = [] 
-        for i in range(len(s)) :
-            a , b = i , i 
-            while a >= 0 and b < len(s) and s[a] == s[b] : 
-                a -= 1 
-                b += 1 
-            print(a ,b )
-            if b - a - 1 > len(substring) :
-                substring = s[a + 1  : b ]
-
-            a , b = i , i + 1  
-            while a >= 0 and b < len(s) and s[a] == s[b] : 
-                a -= 1 
-                b += 1 
-            print(a ,b )
-            if b - a - 1 > len(substring) :
-                substring = s[a + 1  : b ]
-
-            
-
-        return substring
+       
+        if numRows == 1:
+            return s 
+        else : 
+            colums = len(s) // (numRows + numRows -  2) * (numRows - 2 + 1 ) + (numRows - 2 + 1 ) 
+            matrix = np.zeros((numRows, colums), dtype=str)
+            row = 0 
+            col = 0 
+            cham = 0
+            for i in range(len(s)):
+                matrix[row][col] = s[i]
+                if cham < numRows - 1 : 
+                    row += 1 
+                    cham += 1
+                else : 
+                    row -= 1 
+                    col += 1
+                    if row == 0 : 
+                        cham = 0 
+            result = ""
+            for i in range(numRows):
+                for j in range(colums):
+                    if matrix[i][j] != 0 :
+                        result += matrix[i][j]
+                print(result)
+            return result   
+                     
+                
+       
                 
  
-           
+# ngoai ra bai toan con co the giai theo cach (khong can su dung ma tran de luu vao ban do zigzag ): 
+# su dung list de luu tung row ( moi row la mot string va neu co khoang trang hay khong thi no van tra ve ket qua nhu the)          
 
 # Input: s = "babad"
 # Output: "bab"
@@ -57,6 +67,6 @@ class Solution(object):
 if __name__ == "__main__":
     # Tạo object 
     solution = Solution()
-    print(solution.longestPalindrome("babad"))
+    solution.convert("PAYPALISHIRING", 3)
     
     
