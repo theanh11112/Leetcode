@@ -15,39 +15,42 @@ import numpy as np
 
 class Solution(object):
 
-    def reverse(self, x):
+    def myAtoi(self, s):
         """
-        :type x: int
+        :type s: str
         :rtype: int
         """
-        Int_Max = 2**31 -1 
-        Int_min = -2**31 
-        sign = 1 if x >= 0 else -1 
-        x = abs(x)
-
-        if x == 0 : 
+        if not s : 
             return 0 
-        else :
-            res = 0 
-            while x > 0 :
-                digit = x % 10 
-                res = res * 10 + digit
-                if res < Int_min or res > Int_Max :
-                   return 0
-                x = x // 10 
-            return sign * res 
-            
-
-# lesson 7 leetcode : Reserve Interger : solution  =>  chia lay nguyen va chia lay du cho 10 
-# tim hieu toi uu bai toan thi sau moi lan them duoc so moi vao trong vao so hien tai thi len check xem da overflow chua 
-    
-
-    
+        s = s.strip()
+        INT_MIN, INT_MAX = -2**31, 2**31 - 1
+        res = 0 
+        sign = 1 
+        for i in range(len(s)):
+            if s[i].isdigit():
+                res = res * 10 + int(s[i])
+            else : 
+                if i == 0 and s[i] in ['+', '-']:
+                    sign = 1 if s[i] == '+' else -1
+                    continue
+                else :
+                    break
+        res = sign * res     
+        if res < INT_MIN:
+            return INT_MIN
+        if res > INT_MAX:
+            return INT_MAX
+        return res
+                
+                
+# hieu de bai la lam duoc +1: bo khoang trang , check ky tu dau tien, check chuoi so lien tuc sau do(neu bat dau = chu cai return luon 0 ) , check gioi han int32            
+        
 
 
 if __name__ == "__main__":
     # Tạo object 
     solution = Solution()
-    print(solution.reverse(-123))
+    print(solution.myAtoi("+0032abc"))
+    
     
     
