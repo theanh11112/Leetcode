@@ -15,42 +15,39 @@ import numpy as np
 
 class Solution(object):
 
-    def myAtoi(self, s):
+   def isPalindrome(self, x):
         """
-        :type s: str
-        :rtype: int
+        :type x: int
+        :rtype: bool
         """
-        if not s : 
-            return 0 
-        s = s.strip()
-        INT_MIN, INT_MAX = -2**31, 2**31 - 1
-        res = 0 
-        sign = 1 
-        for i in range(len(s)):
-            if s[i].isdigit():
-                res = res * 10 + int(s[i])
-            else : 
-                if i == 0 and s[i] in ['+', '-']:
-                    sign = 1 if s[i] == '+' else -1
-                    continue
-                else :
-                    break
-        res = sign * res     
-        if res < INT_MIN:
-            return INT_MIN
-        if res > INT_MAX:
-            return INT_MAX
-        return res
-                
-                
-# hieu de bai la lam duoc +1: bo khoang trang , check ky tu dau tien, check chuoi so lien tuc sau do(neu bat dau = chu cai return luon 0 ) , check gioi han int32            
-        
+        if x < 0 :
+            return False
+        else :
+            s = str(x)
+            center = len(s) // 2 
+            a = center -1 
+            b = center + 1 if len(s) % 2 == 1 else center 
+            while a >= 0 and b < len(s) :
+                if s[a] != s[b] :
+                    return False 
+                a -= 1 
+                b += 1 
+            return True
+    # cach xai two pointers kha dai ( don gian hon thi chi can so sanh s voi s[::-1] chuoi dao nguoc la xong)
 
+    # def isPalindrome(self, x):
+    #    if x < 0 : 
+    #       return False
+    #    s = str(x)
+    #    return s == s[::-1]
+    
 
 if __name__ == "__main__":
     # Tạo object 
     solution = Solution()
-    print(solution.myAtoi("+0032abc"))
+    print(solution.isPalindrome(121))  # True
+    print(solution.isPalindrome(-121)) # False
+    print(solution.isPalindrome(10))   # False
     
     
     
