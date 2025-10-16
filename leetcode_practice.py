@@ -14,25 +14,33 @@ import numpy as np
 
 
 class Solution(object):
-   def maxArea(self, height):
+   def intToRoman(self, num):
         """
-        :type height: List[int]
-        :rtype: int
+        :type num: int
+        :rtype: str
         """
-        start_point, end_point = 0, len(height) - 1
-        max_area = 0  
-
-        while start_point < end_point:
-            width = end_point -start_point
-            current_height = min(height[start_point], height[end_point])
-            current_area = width * current_height   
-            max_area = max(max_area, current_area)
-            if height[start_point] < height[end_point]:
-                start_point += 1
-            else:
-                end_point -= 1  
-        return max_area 
-
+        val = [
+            1000, 900, 500, 400,
+            100, 90, 50, 40,
+            10, 9, 5, 4,
+            1
+            ]
+        syms = [
+            "M", "CM", "D", "CD",
+            "C", "XC", "L", "XL",
+            "X", "IX", "V", "IV",
+            "I"
+            ]
+        roman_num = ''
+        
+        for i in range(len(val)):
+            if num <= 0:
+                break
+            while num >= val[i]: 
+                num -= val[i]
+                roman_num += syms[i]
+        return roman_num
+    
          
 
                 
@@ -47,6 +55,9 @@ class Solution(object):
 if __name__ == "__main__":
     # Tạo object 
     solution = Solution()   
-    # Test case 1                   
-    height = [1,8,6,2,5,4,8,3,7]        
-    print("Test case 1: ", solution.maxArea(height))  # Expected output: 49  
+    # Test cases
+    test_cases = [3, 4, 9, 58, 1994]
+    for num in test_cases:                          
+        result = solution.intToRoman(num)
+        print(f"Input: {num} => Output: {result}")                   
+    
