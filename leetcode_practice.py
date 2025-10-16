@@ -14,37 +14,32 @@ import numpy as np
 
 
 class Solution(object):
-   def intToRoman(self, num):
+   def romanToInt(self, s):
         """
-        :type num: int
-        :rtype: str
+        :type s: str
+        :rtype: int
         """
-        val = [
-            1000, 900, 500, 400,
-            100, 90, 50, 40,
-            10, 9, 5, 4,
-            1
-            ]
-        syms = [
-            "M", "CM", "D", "CD",
-            "C", "XC", "L", "XL",
-            "X", "IX", "V", "IV",
-            "I"
-            ]
-        roman_num = ''
-        
-        for i in range(len(val)):
-            if num <= 0:
-                break
-            while num >= val[i]: 
-                num -= val[i]
-                roman_num += syms[i]
-        return roman_num
-    
-         
 
-                
-    
+        roman_numerals = {
+            'I': 1,
+            'V': 5,
+            'X': 10,
+            'L': 50,
+            'C': 100,
+            'D': 500,
+            'M': 1000
+        }
+        
+        total = 0 
+        i = 0 
+        while i < len(s):
+            if i + 1 < len(s) and roman_numerals[s[i]] < roman_numerals[s[i + 1]]:
+                total += roman_numerals[s[i + 1]] - roman_numerals[s[i]]
+                i += 2
+            else:
+                total += roman_numerals[s[i]]
+                i += 1  
+        return total
             
                 
         
@@ -55,9 +50,8 @@ class Solution(object):
 if __name__ == "__main__":
     # Tạo object 
     solution = Solution()   
-    # Test cases
-    test_cases = [3, 4, 9, 58, 1994]
-    for num in test_cases:                          
-        result = solution.intToRoman(num)
-        print(f"Input: {num} => Output: {result}")                   
-    
+    # Test case 1   
+    s = "MCMXCIV"
+    result = solution.romanToInt(s)
+    print(f"Input: s = {s}")
+    print(f"Output: {result}")  # Expected output: 1994
