@@ -14,33 +14,25 @@ import numpy as np
 
 
 class Solution(object):
-   def romanToInt(self, s):
+    def longestCommonPrefix(self, strs):
         """
-        :type s: str
-        :rtype: int
+        :type strs: List[str]
+        :rtype: str
         """
-
-        roman_numerals = {
-            'I': 1,
-            'V': 5,
-            'X': 10,
-            'L': 50,
-            'C': 100,
-            'D': 500,
-            'M': 1000
-        }
+        if not strs :
+           return ''
         
-        total = 0 
-        i = 0 
-        while i < len(s):
-            if i + 1 < len(s) and roman_numerals[s[i]] < roman_numerals[s[i + 1]]:
-                total += roman_numerals[s[i + 1]] - roman_numerals[s[i]]
-                i += 2
-            else:
-                total += roman_numerals[s[i]]
-                i += 1  
-        return total
+        shortest = min(strs, key=len)
+        result = ''
+        for i in range(len(shortest)) :
+            for j in range(len(strs)) :
+                if (shortest[i] != strs[j][i]):
+                   return result
+            result += strs[0][i]
             
+        return result
+        
+    
                 
         
 
@@ -50,8 +42,8 @@ class Solution(object):
 if __name__ == "__main__":
     # Tạo object 
     solution = Solution()   
-    # Test case 1   
-    s = "MCMXCIV"
-    result = solution.romanToInt(s)
-    print(f"Input: s = {s}")
-    print(f"Output: {result}")  # Expected output: 1994
+    # Test case 1  
+    print(solution.longestCommonPrefix(["flower","flow","flight"]))  # 👉 "fl"
+    print(solution.longestCommonPrefix(["dog","racecar","car"]))     # 👉 ""
+    print(solution.longestCommonPrefix(["interspecies","interstellar","interstate"]))  # 👉 "inters"
+ 
