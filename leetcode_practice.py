@@ -12,39 +12,34 @@ Hướng dẫn:
 from typing import List
 
 class Solution(object):
-    def threeSumClosest(self, nums, target):
+   def letterCombinations(self, digits):
         """
-        :type nums: List[int]
-        :type target: int
-        :rtype: int
+        :type digits: str
+        :rtype: List[str]
         """
-        if len(nums) < 3:
-            return None
+        digit_to_char = {
+            '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',
+            '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'
+        }
+        result = [""] 
 
-        nums.sort()
-        closest_sum = nums[0] + nums[1] + nums[2]
+        if not digits:
+            return []
+        for i in digits:
+                currents = []
+                for k in result:
+                    for m in digit_to_char[i]:
+                        currents.append(k + m)
+                result = currents
+        return result
+   
+                    
+                
+                    
 
-        for i in range(len(nums)):
-            left, right = i - 1, i + 1
-            while left >= 0 and right < len(nums):
-                curr_sum = nums[left] + nums[i] + nums[right]
+     
+        
 
-                # Cập nhật tổng gần nhất
-                if abs(closest_sum - target) > abs(curr_sum - target):
-                    closest_sum = curr_sum
-
-                # Dịch con trỏ
-                if curr_sum > target:
-                    left -= 1
-                elif curr_sum < target:
-                    right += 1
-                else:
-                    return curr_sum  # Nếu trùng khớp hoàn hảo thì trả về luôn
-
-        return closest_sum
-# bai nay giai giong bai 3 tong o truoc nhung co dieu la khi tong = target thi return luon vi bai chi yeu cau tim tong gan target nhat 
-# trong bai nay va ca bai truoc khi = 0 or = targer thi left -= 1 , right += 1 , la khong sai (mac du neu de xet so cap da duoc duyet thi miss mat 2 cap left; right +=1 , left -=1;right)
-# nhung ko anh huong gi den bai toan 
 
 
 if __name__ == "__main__":
@@ -52,20 +47,18 @@ if __name__ == "__main__":
 
     # ✅ Các test case dành cho bài 3Sum Closest
     test_cases = [
-        ([-1, 2, 1, -4], 1, 2),      # (-1 + 2 + 1 = 2)
-        ([0, 0, 0], 1, 0),           # Tổng gần nhất = 0
-        ([1, 1, 1, 0], -100, 2),     # Tổng nhỏ nhất = 0+1+1 = 2
-        ([1, 1, 1, 0], 100, 3),      # Tổng lớn nhất = 1+1+1 = 3
-        ([-3, -2, -5, 3, -4], -1, -2),  # Tổng gần nhất = -2
-        ([0, 2, 1, -3], 1, 0),       # Tổng gần nhất = 0
+        ("23", ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]),
+        ("", []),
+        ("2", ["a", "b", "c"]),
+        ("9", ["w", "x", "y", "z"]),
     ]
-
-    for idx, (nums, target, expected) in enumerate(test_cases, 1):
-        result = solution.threeSumClosest(nums, target)
-        print(f"Test case {idx}: nums = {nums}, target = {target}")
+    for idx, (digits, expected) in enumerate(test_cases, 1):
+        result = solution.letterCombinations(digits)
+        print(f"Test case {idx}: digits = '{digits}'")
         print(f"  ➤ Kết quả mong đợi: {expected}")
         print(f"  ➤ Kết quả thực tế:  {result}")
-        if result == expected:
+        if sorted(result) == sorted(expected):
             print("✅ PASSED\n")
         else:
             print("❌ FAILED\n")
+   
