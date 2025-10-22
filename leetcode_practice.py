@@ -10,77 +10,46 @@ Hướng dẫn:
 """
 
 import numpy as np
-class ListNode(object):
-   def __init__(self, val=0, next=None):
-      self.val = val
-      self.next = next
 
-def print_linked_list(head):
-    result = []
-    while head:
-        result.append(head.val)
-        head = head.next
-    return result
 
 
 class Solution(object):
+    def isValid(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        stack = [] 
+        mapping = { ")": "(", "}": "{", "]": "[" }
+        for char in s:
+            if char in mapping:
+                top_element = stack.pop() if stack else '#'
+                if mapping[char] != top_element:
+                    return False
+            else :
+                stack.append(char)
+        return not stack 
+
+#     if char in mapping: la so sanh theo key chu khong phai so sanh theo value 
+#    mapping = { ")": "(", "}": "{", "]": "[" }  tao 1 dict de luu tru key va value           
          
-   def removeNthFromEnd(self, head, n):
-        """
-        :type head: Optional[ListNode]
-        :type n: int
-        :rtype: Optional[ListNode]
-        """
-        if not head:
-            return None
-        dummy = ListNode(0, head)
-        fastnode = dummy
-        slownode = dummy
-
-        for i in range(n):
-           if fastnode:
-              fastnode = fastnode.next
-           else : 
-              return head 
-          
-        while fastnode.next:
-             fastnode = fastnode.next
-             slownode = slownode.next  
-        slownode.next = slownode.next.next
-        
-        return dummy.next
-            
-
-        
-
+   
 
 if __name__ == "__main__":
 
     # Tạo object 
     solution = Solution()   
-    # Test case 1   
-    head = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5)))))
-    print("Input:", [1,2,3,4,5], "n=2")
-    new_head = solution.removeNthFromEnd(head, 2)
-    print("Output:", print_linked_list(new_head))  # ✅ [1,2,3,5]
+    # Test case 1  
+    s1 = "()"
+    print("Test case 1: ", solution.isValid(s1))  # Kết quả đúng: True            
 
-    # Test 2 - xóa node đầu tiên
-    head = ListNode(1, ListNode(2))
-    print("Input:", [1,2], "n=2")
-    new_head = solution.removeNthFromEnd(head, 2)
-    print("Output:", print_linked_list(new_head))  # ✅ [2]
-
-    # Test 3 - list chỉ có 1 node
-    head = ListNode(1)
-    print("Input:", [1], "n=1")
-    new_head = solution.removeNthFromEnd(head, 1)
-    print("Output:", print_linked_list(new_head))  # ✅ []
-
-    # Test 4 - xóa node cuối
-    head = ListNode(1, ListNode(2, ListNode(3)))
-    print("Input:", [1,2,3], "n=1")
-    new_head = solution.removeNthFromEnd(head, 1)
-    print("Output:", print_linked_list(new_head))  # ✅ [1,2]
-    
-
-
+    # Test case 2   
+    s2 = "()[]{}"
+    print("Test case 2: ", solution.isValid(s2))  # Kết quả đúng: True  
+    # Test case 3   
+    s3 = "(]"
+    print("Test case 3: ", solution.isValid(s3))  # Kết quả đúng: False  
+    # Test case 4   
+    s4 = "([)]"             
+    print("Test case 4: ", solution.isValid(s4))  # Kết quả đúng: False 
+   
