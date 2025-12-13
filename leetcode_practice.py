@@ -2,19 +2,24 @@ from typing import List
 
 # ===== CHỖ NÀY BẠN TỰ VIẾT =====
 class Solution:
-    def removeDuplicates(self, nums: List[int]) -> int:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        if not nums :
+            return 0 
         
-       if not nums :
-           return 0
         
-        
-       k = 1 
-       for i in range(1, len(nums)) :
-           if (nums[i] != nums[k - 1]):
-               nums[k] = nums [i]
-               k += 1 
+        k = 0 
+        for i in range(len(nums)) :
+            if (nums[i] != val) :
+                nums[k] = nums[i]
+                k += 1
+                
+        return k 
+                
                
-       return k
+                
+                
+            
+        pass
 
 
 # ===== TEST CASES (GIỐNG LEETCODE) =====
@@ -22,19 +27,20 @@ if __name__ == "__main__":
     solution = Solution()
 
     test_cases = [
-        ([1, 1, 2], [1, 2]),
-        ([0, 0, 1, 1, 1, 2, 2, 3, 3, 4], [0, 1, 2, 3, 4]),
-        ([1, 1, 1], [1]),
-        ([1, 2, 3], [1, 2, 3]),
-        ([1], [1]),
-        ([], []),
+        ([3, 2, 2, 3], 3, [2, 2]),
+        ([0, 1, 2, 2, 3, 0, 4, 2], 2, [0, 0, 1, 3, 4]),
+        ([1], 1, []),
+        ([1], 2, [1]),
+        ([2, 2, 2], 2, []),
+        ([], 1, []),
     ]
 
-    for idx, (nums, expectedNums) in enumerate(test_cases, 1):
+    for idx, (nums, val, expectedNums) in enumerate(test_cases, 1):
         print(f"\nTest {idx}")
         print("Input nums:", nums)
+        print("val:", val)
 
-        k = solution.removeDuplicates(nums)
+        k = solution.removeElement(nums, val)
 
         print("Returned k:", k)
         print("Expected k:", len(expectedNums))
@@ -42,9 +48,12 @@ if __name__ == "__main__":
         # Check k
         assert k == len(expectedNums), "❌ k is incorrect"
 
-        # Check first k elements
-        for i in range(k):
-            assert nums[i] == expectedNums[i], f"❌ Wrong value at index {i}"
+        # Vì thứ tự KHÔNG quan trọng → sort trước khi so
+        nums_first_k = sorted(nums[:k])
+        expected_sorted = sorted(expectedNums)
 
-        print("Result nums (first k):", nums[:k])
+        for i in range(k):
+            assert nums_first_k[i] == expected_sorted[i], f"❌ Wrong value at index {i}"
+
+        print("Result nums (first k, sorted):", nums_first_k)
         print("✅ PASSED")
