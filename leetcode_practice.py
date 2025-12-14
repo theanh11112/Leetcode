@@ -1,59 +1,64 @@
 from typing import List
 
 # ===== CHỖ NÀY BẠN TỰ VIẾT =====
-class Solution:
-    def removeElement(self, nums: List[int], val: int) -> int:
-        if not nums :
-            return 0 
+class Solution(object):
+    def strStr(self, haystack, needle):
+        """
+        :type haystack: str
+        :type needle: str
+        :rtype: int
+        """
+        if needle == "" :
+            return 0
         
+        k = 0
+        for i in range(len(haystack)) :
+            while (k < len(needle) and i + k < len(haystack) and haystack[i + k] == needle[k] ):
+                if ( k == (len(needle) - 1)):
+                    return i 
+                else :
+                    k += 1
+            k = 0
+        return -1  
+                 
+               
+            
         
-        k = 0 
-        for i in range(len(nums)) :
-            if (nums[i] != val) :
-                nums[k] = nums[i]
-                k += 1
-                
-        return k 
+    
                 
                
                 
                 
             
-        pass
-
+    
 
 # ===== TEST CASES (GIỐNG LEETCODE) =====
 if __name__ == "__main__":
     solution = Solution()
 
     test_cases = [
-        ([3, 2, 2, 3], 3, [2, 2]),
-        ([0, 1, 2, 2, 3, 0, 4, 2], 2, [0, 0, 1, 3, 4]),
-        ([1], 1, []),
-        ([1], 2, [1]),
-        ([2, 2, 2], 2, []),
-        ([], 1, []),
+        ("sadbutsad", "sad", 0),
+        ("leetcode", "leeto", -1),
+        ("hello", "ll", 2),
+        ("aaaaa", "bba", -1),
+        ("abc", "abc", 0),
+        ("abc", "c", 2),
+        ("abc", "d", -1),
+        ("mississippi", "issi", 1),
+        ("mississippi", "issip", 4),
+        ("a", "a", 0),
+        ("a", "b", -1),
     ]
 
-    for idx, (nums, val, expectedNums) in enumerate(test_cases, 1):
+    for idx, (haystack, needle, expected) in enumerate(test_cases, 1):
         print(f"\nTest {idx}")
-        print("Input nums:", nums)
-        print("val:", val)
+        print("haystack:", haystack)
+        print("needle:", needle)
 
-        k = solution.removeElement(nums, val)
+        result = solution.strStr(haystack, needle)
 
-        print("Returned k:", k)
-        print("Expected k:", len(expectedNums))
+        print("Returned:", result)
+        print("Expected:", expected)
 
-        # Check k
-        assert k == len(expectedNums), "❌ k is incorrect"
-
-        # Vì thứ tự KHÔNG quan trọng → sort trước khi so
-        nums_first_k = sorted(nums[:k])
-        expected_sorted = sorted(expectedNums)
-
-        for i in range(k):
-            assert nums_first_k[i] == expected_sorted[i], f"❌ Wrong value at index {i}"
-
-        print("Result nums (first k, sorted):", nums_first_k)
+        assert result == expected, "❌ WRONG ANSWER"
         print("✅ PASSED")
