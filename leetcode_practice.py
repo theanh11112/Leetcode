@@ -1,61 +1,111 @@
-from typing import List
-
 # ===== CHỖ NÀY BẠN TỰ VIẾT =====
 class Solution(object):
-    def strStr(self, haystack, needle):
+    def divide(self, dividend, divisor):
         """
-        :type haystack: str
-        :type needle: str
+        :type dividend: int
+        :type divisor: int
         :rtype: int
         """
-        if needle == "" :
-            return 0
         
-        k = 0
-        for i in range(len(haystack)) :
-            while (k < len(needle) and i + k < len(haystack) and haystack[i + k] == needle[k] ):
-                if ( k == (len(needle) - 1)):
-                    return i 
-                else :
-                    k += 1
-            k = 0
-        return -1  
-                 
-               
+        INT_MAX = 2**31 - 1
+        INT_MIN = -2**31
+     
+        if divisor == 0 :
+            return None
+        
+        if (dividend == INT_MIN and divisor == -1) :
+            return INT_MAX
+        
+        
+        negative = (dividend < 0) != (divisor < 0)
+        dividend = abs(dividend)
+        divisor = abs(divisor)
+        
+        
+        result = 0 
+        temp = dividend
+        temp1 = divisor
+        k= 0 
+        
+        while (temp >= temp1):
+              k = 0 
+              while (temp >= (temp1 << k)):
+                  k += 1  
+              result += (1 << (k - 1))
+              temp  -= (temp1 << (k - 1))           
+                
+        if (negative) :
+            return -result 
+        else :
+            return result 
+        
             
         
-    
                 
-               
-                
-                
+        
             
-    
+            
+            
+        
+        
+            
+        
+        
+        pass   # 🚫 KHÔNG VIẾT THUẬT TOÁN Ở ĐÂY
+
 
 # ===== TEST CASES (GIỐNG LEETCODE) =====
 if __name__ == "__main__":
     solution = Solution()
 
+    INT_MAX = 2**31 - 1
+    INT_MIN = -2**31
+
     test_cases = [
-        ("sadbutsad", "sad", 0),
-        ("leetcode", "leeto", -1),
-        ("hello", "ll", 2),
-        ("aaaaa", "bba", -1),
-        ("abc", "abc", 0),
-        ("abc", "c", 2),
-        ("abc", "d", -1),
-        ("mississippi", "issi", 1),
-        ("mississippi", "issip", 4),
-        ("a", "a", 0),
-        ("a", "b", -1),
+        # basic
+        (10, 3, 3),
+        (7, -3, -2),
+        (-7, 3, -2),
+        (-7, -3, 2),
+
+        # divisible
+        (8, 2, 4),
+        (-8, 2, -4),
+        (8, -2, -4),
+
+        # dividend = 0
+        (0, 1, 0),
+        (0, -1, 0),
+
+        # divisor = 1 / -1
+        (5, 1, 5),
+        (5, -1, -5),
+        (-5, 1, -5),
+        (-5, -1, 5),
+
+        # edge 32-bit
+        (INT_MIN, 1, INT_MIN),
+        (INT_MAX, 1, INT_MAX),
+
+        # overflow case (QUAN TRỌNG)
+        (INT_MIN, -1, INT_MAX),
+
+        # small numbers
+        (1, 1, 1),
+        (-1, 1, -1),
+        (1, -1, -1),
+
+        # larger
+        (100, 9, 11),
+        (-100, 9, -11),
     ]
 
-    for idx, (haystack, needle, expected) in enumerate(test_cases, 1):
+    for idx, (dividend, divisor, expected) in enumerate(test_cases, 1):
         print(f"\nTest {idx}")
-        print("haystack:", haystack)
-        print("needle:", needle)
+        print("dividend:", dividend)
+        print("divisor:", divisor)
 
-        result = solution.strStr(haystack, needle)
+        result = solution.divide(dividend, divisor)
 
         print("Returned:", result)
         print("Expected:", expected)
