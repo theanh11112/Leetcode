@@ -1,121 +1,94 @@
+# =========================
+# 31. Next Permutation
+# =========================
+
 # ===== CHỖ NÀY BẠN TỰ VIẾT =====
-from collections import Counter
-
 class Solution(object):
-    def findSubstring(self, s, words):
-        """
-        :type s: str
-        :type words: List[str]
-        :rtype: List[int]
-        """
-        if not words :
-            return [] 
-        
-        word_len = len(words[0])
-        total_len = len(words) * word_len
-        need = Counter(words)
-        result = []
-        
-        for offset in range(word_len):
-            
-            left = offset 
-            right = offset
-            window = {}
-            count = 0 
-            
-            while right + word_len <= len(s) :
-                
-                word = s[right : right + word_len]
-                
-                if word not in need :
-                    window.clear()
-                    right += word_len
-                    left = right 
-                    count = 0
-                    continue 
-                      
-                window[word] = window.get(word, 0) + 1
-                count += 1 
-                right += word_len
-                
-                
-                while window[word] > need[word] :
-                    left_word = s[left : left + word_len]
-                    window[left_word] = window.get(left_word, 0) - 1
-                    count -= 1 
-                    left +=  word_len
-                    
-                if (count == len(words)):
-                    result.append(left)
-                    left_word = s[left : left + word_len]
-                    window[left_word] = window.get(left_word, 0) - 1 
-                    left += word_len
-                    count -= 1 
-                    
-                    
-        return result         
-                
-      
+    def nextPermutation(self, nums):
+        n = len(nums)
+        if n <= 1:
+            return
 
+        # 1️⃣ tìm pivot
+        i = n - 2
+        while i >= 0 and nums[i] >= nums[i + 1]:
+            i -= 1
 
-# ===== TEST CASES (GIỐNG LEETCODE) =====
+        # 2️⃣ swap pivot với số nhỏ nhất > pivot
+        if i >= 0:
+            j = n - 1
+            while nums[j] <= nums[i]:
+                j -= 1
+            nums[i], nums[j] = nums[j], nums[i]
+
+        # 3️⃣ reverse đoạn sau pivot
+        l, r = i + 1, n - 1
+        while l < r:
+            nums[l], nums[r] = nums[r], nums[l]
+            l += 1
+            r -= 1
+        return nums
+    
+# =========================
+# TEST CASES (GIỐNG LEETCODE)
+# =========================
 if __name__ == "__main__":
     solution = Solution()
 
     test_cases = [
         # Example 1
         (
-            "barfoothefoobarman",
-            ["foo", "bar"],
-            [0, 9]
+            [1, 2, 3],
+            [1, 3, 2]
         ),
 
         # Example 2
         (
-            "wordgoodgoodgoodbestword",
-            ["word", "good", "best", "word"],
-            []
+            [3, 2, 1],
+            [1, 2, 3]
         ),
 
         # Example 3
         (
-            "barfoofoobarthefoobarman",
-            ["bar", "foo", "the"],
-            [6, 9, 12]
+            [1, 1, 5],
+            [1, 5, 1]
         ),
 
-        # edge cases
+        # Edge cases
         (
-            "",
-            ["a"],
-            []
+            [1],
+            [1]
         ),
         (
-            "aaaaaa",
-            ["aa", "aa"],
-            [0, 1, 2]
+            [1, 3, 2],
+            [2, 1, 3]
         ),
         (
-            "foobar",
-            ["foo", "bar"],
-            [0]
+            [2, 3, 1],
+            [3, 1, 2]
         ),
         (
-            "foobarfoo",
-            ["foo", "bar"],
-            [0, 3]
+            [1, 5, 1],
+            [5, 1, 1]
+        ),
+        (
+            [5, 4, 3, 2, 1],
+            [1, 2, 3, 4, 5]
+        ),
+        (
+            [1, 2, 2, 3],
+            [1, 2, 3, 2]
         ),
     ]
 
-    for idx, (s, words, expected) in enumerate(test_cases, 1):
+    for idx, (nums, expected) in enumerate(test_cases, 1):
         print(f"\nTest {idx}")
-        print("s:", s)
-        print("words:", words)
+        print("Input   :", nums)
 
-        result = solution.findSubstring(s, words)
+        solution.nextPermutation(nums)
 
-        print("Returned:", result)
+        print("Returned:", nums)
         print("Expected:", expected)
 
-        assert sorted(result) == sorted(expected), "❌ WRONG ANSWER"
+        assert nums == expected, "❌ WRONG ANSWER"
         print("✅ PASSED")
