@@ -1,114 +1,121 @@
 # ===== CHỖ NÀY BẠN TỰ VIẾT =====
+from collections import Counter
+
 class Solution(object):
-    def divide(self, dividend, divisor):
+    def findSubstring(self, s, words):
         """
-        :type dividend: int
-        :type divisor: int
-        :rtype: int
+        :type s: str
+        :type words: List[str]
+        :rtype: List[int]
         """
+        if not words :
+            return [] 
         
-        INT_MAX = 2**31 - 1
-        INT_MIN = -2**31
-     
-        if divisor == 0 :
-            return None
+        word_len = len(words[0])
+        total_len = len(words) * word_len
+        need = Counter(words)
+        result = []
         
-        if (dividend == INT_MIN and divisor == -1) :
-            return INT_MAX
-        
-        
-        negative = (dividend < 0) != (divisor < 0)
-        dividend = abs(dividend)
-        divisor = abs(divisor)
-        
-        
-        result = 0 
-        temp = dividend
-        temp1 = divisor
-        k= 0 
-        
-        while (temp >= temp1):
-              k = 0 
-              while (temp >= (temp1 << k)):
-                  k += 1  
-              result += (1 << (k - 1))
-              temp  -= (temp1 << (k - 1))           
+        for offset in range(word_len):
+            
+            left = offset 
+            right = offset
+            window = {}
+            count = 0 
+            
+            while right + word_len <= len(s) :
                 
-        if (negative) :
-            return -result 
-        else :
-            return result 
-        
-            
-        
+                word = s[right : right + word_len]
                 
-        
-            
-            
-            
-        
-        
-            
-        
-        
-        pass   # 🚫 KHÔNG VIẾT THUẬT TOÁN Ở ĐÂY
+                if word not in need :
+                    window.clear()
+                    right += word_len
+                    left = right 
+                    count = 0
+                    continue 
+                      
+                window[word] = window.get(word, 0) + 1
+                count += 1 
+                right += word_len
+                
+                
+                while window[word] > need[word] :
+                    left_word = s[left : left + word_len]
+                    window[left_word] = window.get(left_word, 0) - 1
+                    count -= 1 
+                    left +=  word_len
+                    
+                if (count == len(words)):
+                    result.append(left)
+                    left_word = s[left : left + word_len]
+                    window[left_word] = window.get(left_word, 0) - 1 
+                    left += word_len
+                    count -= 1 
+                    
+                    
+        return result         
+                
+      
 
 
 # ===== TEST CASES (GIỐNG LEETCODE) =====
 if __name__ == "__main__":
     solution = Solution()
 
-    INT_MAX = 2**31 - 1
-    INT_MIN = -2**31
-
     test_cases = [
-        # basic
-        (10, 3, 3),
-        (7, -3, -2),
-        (-7, 3, -2),
-        (-7, -3, 2),
+        # Example 1
+        (
+            "barfoothefoobarman",
+            ["foo", "bar"],
+            [0, 9]
+        ),
 
-        # divisible
-        (8, 2, 4),
-        (-8, 2, -4),
-        (8, -2, -4),
+        # Example 2
+        (
+            "wordgoodgoodgoodbestword",
+            ["word", "good", "best", "word"],
+            []
+        ),
 
-        # dividend = 0
-        (0, 1, 0),
-        (0, -1, 0),
+        # Example 3
+        (
+            "barfoofoobarthefoobarman",
+            ["bar", "foo", "the"],
+            [6, 9, 12]
+        ),
 
-        # divisor = 1 / -1
-        (5, 1, 5),
-        (5, -1, -5),
-        (-5, 1, -5),
-        (-5, -1, 5),
-
-        # edge 32-bit
-        (INT_MIN, 1, INT_MIN),
-        (INT_MAX, 1, INT_MAX),
-
-        # overflow case (QUAN TRỌNG)
-        (INT_MIN, -1, INT_MAX),
-
-        # small numbers
-        (1, 1, 1),
-        (-1, 1, -1),
-        (1, -1, -1),
-
-        # larger
-        (100, 9, 11),
-        (-100, 9, -11),
+        # edge cases
+        (
+            "",
+            ["a"],
+            []
+        ),
+        (
+            "aaaaaa",
+            ["aa", "aa"],
+            [0, 1, 2]
+        ),
+        (
+            "foobar",
+            ["foo", "bar"],
+            [0]
+        ),
+        (
+            "foobarfoo",
+            ["foo", "bar"],
+            [0, 3]
+        ),
     ]
 
-    for idx, (dividend, divisor, expected) in enumerate(test_cases, 1):
+    for idx, (s, words, expected) in enumerate(test_cases, 1):
         print(f"\nTest {idx}")
-        print("dividend:", dividend)
-        print("divisor:", divisor)
+        print("s:", s)
+        print("words:", words)
 
-        result = solution.divide(dividend, divisor)
+        result = solution.findSubstring(s, words)
 
         print("Returned:", result)
         print("Expected:", expected)
 
-        assert result == expected, "❌ WRONG ANSWER"
+        assert sorted(result) == sorted(expected), "❌ WRONG ANSWER"
         print("✅ PASSED")
