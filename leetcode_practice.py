@@ -1,31 +1,38 @@
 # =========================
-# 32. Longest Valid Parentheses
+# 33. Search in Rotated Sorted Array
 # =========================
 
 class Solution(object):
-    def longestValidParentheses(self, s):
+    def search(self, nums, target):
+        left = 0
+        right = len(nums) -1
         
-        max_len = 0 
-        stack = [-1]
-        
-        for i, ch in enumerate(s) :
-            if ch == '(':
-                stack.append(i)
-            else :
-                stack.pop()
-                if not stack :
-                    stack.append(i)
+        while left <= right :
+            mid = (left + right ) // 2
+            if (nums[mid] == target):
+                return mid
+            
+            if nums[left] <= nums[mid] :
+                if nums[left] <= target < nums[mid]:
+                    right = mid - 1
                 else:
-                    max_len = max(max_len,i - stack[-1])
+                    left = mid + 1 
+            else :
+                if nums[right] >= target > nums[mid]:
+                    left = mid + 1
+                else :
+                    right = mid - 1
                     
-                        
-        return max_len
                 
+        return -1    
+          
                 
                 
             
+                
+                
             
-            
+        pass
 
 
 # =========================
@@ -37,62 +44,90 @@ if __name__ == "__main__":
     test_cases = [
         # Example 1
         (
-            "(()",
-            2
+            [4,5,6,7,0,1,2],
+            0,
+            4
         ),
 
         # Example 2
         (
-            ")()())",
-            4
+            [4,5,6,7,0,1,2],
+            3,
+            -1
         ),
 
         # Example 3
         (
-            "",
+            [1],
+            0,
+            -1
+        ),
+
+        # ===== Additional cases =====
+
+        # No rotation
+        (
+            [1,2,3,4,5],
+            3,
+            2
+        ),
+
+        # Rotated at middle
+        (
+            [6,7,1,2,3,4,5],
+            4,
+            5
+        ),
+
+        # Target at beginning
+        (
+            [5,6,7,1,2,3,4],
+            5,
             0
         ),
 
-        # Additional test cases
+        # Target at end
         (
-            "()",
-            2
-        ),
-        (
-            "()(())",
+            [5,6,7,1,2,3,4],
+            4,
             6
         ),
+
+        # Target is pivot
         (
-            "(((((",
-            0
+            [3,4,5,6,7,1,2],
+            1,
+            5
         ),
+
+        # Array of size 2
         (
-            ")))))",
-            0
+            [3,1],
+            1,
+            1
         ),
+
+        # Array of size 2 - not found
         (
-            "()(()",
-            2
+            [3,1],
+            2,
+            -1
         ),
+
+        # Fully rotated (same as original)
         (
-            ")()()(",
-            4
-        ),
-        (
-            "()()()",
-            6
-        ),
-        (
-            "(()())",
-            6
+            [1,2,3,4,5],
+            6,
+            -1
         ),
     ]
 
-    for idx, (s, expected) in enumerate(test_cases, 1):
+    for idx, (nums, target, expected) in enumerate(test_cases, 1):
         print(f"\nTest {idx}")
-        print("Input   :", repr(s))
+        print("Nums   :", nums)
+        print("Target :", target)
 
-        result = solution.longestValidParentheses(s)
+        result = solution.search(nums, target)
 
         print("Returned:", result)
         print("Expected:", expected)
