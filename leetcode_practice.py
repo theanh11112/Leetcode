@@ -1,42 +1,35 @@
 # =========================
-# 34. Find First and Last Position of Element in Sorted Array
+# 35. Search Insert Position
 # =========================
 
 class Solution(object):
-    def searchRange(self, nums, target):
+    def searchInsert(self, nums, target):
         """
         :type nums: List[int]
         :type target: int
-        :rtype: List[int]
+        :rtype: int
         """
+
+        # TODO:
         if not nums :
-            return [-1, -1]
-        # TODO: Bạn tự viết thuật toán ở đây
-        result = [-1, -1]
-        left, right = 0 , len(nums) - 1
+            return 0
+        
+        left, right = 0, len(nums) - 1 
         
         while left <= right :
-            mid = (left + right) // 2
+            mid = (left + right ) // 2 
             if nums[mid] == target:
-                result[0] = mid      
+                return mid
             if nums[mid] < target:
                 left = mid + 1
-            else:
-                right = mid - 1
-                
-        left, right = 0 , len(nums) - 1      
-        while left <= right :
-            mid = (left + right) // 2
-            if nums[mid] == target:
-                result[1] = mid      
-            if nums[mid] > target:
-                 right = mid - 1
-            else:
-                left = mid + 1
-           
-                
-            
-        return result
+            else :
+                right = mid -1 
+        return right + 1 
+          
+    
+       
+    
+     
 
 
 # =========================
@@ -48,74 +41,67 @@ if __name__ == "__main__":
     test_cases = [
         # Example 1
         (
-            [5,7,7,8,8,10],
-            8,
-            [3,4]
+            [1,3,5,6],
+            5,
+            2
         ),
 
         # Example 2
         (
-            [5,7,7,8,8,10],
-            6,
-            [-1,-1]
+            [1,3,5,6],
+            2,
+            1
         ),
 
         # Example 3
         (
-            [],
-            0,
-            [-1,-1]
+            [1,3,5,6],
+            7,
+            4
         ),
 
         # ===== Additional cases =====
 
+        # Insert at beginning
+        (
+            [1,3,5,6],
+            0,
+            0
+        ),
+
+        # Insert at end
+        (
+            [1,3,5,6],
+            10,
+            4
+        ),
+
         # Single element - found
         (
-            [1],
-            1,
-            [0,0]
+            [5],
+            5,
+            0
         ),
 
-        # Single element - not found
+        # Single element - insert before
         (
-            [1],
-            0,
-            [-1,-1]
-        ),
-
-        # All elements are target
-        (
-            [2,2,2,2,2],
+            [5],
             2,
-            [0,4]
+            0
         ),
 
-        # Target at beginning
+        # Single element - insert after
         (
-            [3,4,5,6,7],
-            3,
-            [0,0]
-        ),
-
-        # Target at end
-        (
-            [3,4,5,6,7],
+            [5],
             7,
-            [4,4]
+            1
         ),
 
-        # Multiple occurrences in middle
+        # Empty array
         (
-            [1,2,3,3,3,4,5],
+            [],
             3,
-            [2,4]
-        ),
-
-        # Target not present
-        (
-            [1,2,3,4,5],
-            6,
-            [-1,-1]
+            0
         ),
     ]
 
@@ -124,7 +110,7 @@ if __name__ == "__main__":
         print("Nums    :", nums)
         print("Target  :", target)
 
-        result = solution.searchRange(nums, target)
+        result = solution.searchInsert(nums, target)
 
         print("Returned:", result)
         print("Expected:", expected)
