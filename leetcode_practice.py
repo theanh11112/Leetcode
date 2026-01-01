@@ -1,119 +1,116 @@
-# =========================
-# 35. Search Insert Position
-# =========================
-
 class Solution(object):
-    def searchInsert(self, nums, target):
+    def isValidSudoku(self, board):
         """
-        :type nums: List[int]
-        :type target: int
-        :rtype: int
+        :type board: List[List[str]]
+        :rtype: bool
         """
 
         # TODO:
-        if not nums :
-            return 0
+        rows = [set() for _ in range(9)]
+        cols = [set() for _ in range(9)]
+        blocks = [[set() for _ in range(3)] for _ in range(3)]
         
-        left, right = 0, len(nums) - 1 
-        
-        while left <= right :
-            mid = (left + right ) // 2 
-            if nums[mid] == target:
-                return mid
-            if nums[mid] < target:
-                left = mid + 1
-            else :
-                right = mid -1 
-        return right + 1 
-          
-    
-       
-    
-     
+        for i in range(9) :
+            for j in range(9) :
+                val = board[i][j]
+                if val == "." :
+                    continue
+                
+                if val in rows[i]:
+                    return False
+                rows[i].add(val)
+                
+                if val in cols[j]:
+                    return False
+                cols[j].add(val)
+                
+                br = i // 3 
+                bc = j // 3 
+                if val in blocks[br][bc]:
+                    return False
+                blocks[br][bc].add(val)
+                
+        return True
+                
+                    
+                    
+                     
+        pass
 
 
-# =========================
-# TEST CASES (GIỐNG LEETCODE)
-# =========================
 if __name__ == "__main__":
     solution = Solution()
 
     test_cases = [
-        # Example 1
+        # ===== Example 1: Valid Sudoku =====
         (
-            [1,3,5,6],
-            5,
-            2
+            [
+                ["5","3",".",".","7",".",".",".","."],
+                ["6",".",".","1","9","5",".",".","."],
+                [".","9","8",".",".",".",".","6","."],
+                ["8",".",".",".","6",".",".",".","3"],
+                ["4",".",".","8",".","3",".",".","1"],
+                ["7",".",".",".","2",".",".",".","6"],
+                [".","6",".",".",".",".","2","8","."],
+                [".",".",".","4","1","9",".",".","5"],
+                [".",".",".",".","8",".",".","7","9"]
+            ],
+            True
         ),
 
-        # Example 2
+        # ===== Example 2: Invalid Sudoku (row conflict) =====
         (
-            [1,3,5,6],
-            2,
-            1
+            [
+                ["8","3",".",".","7",".",".",".","."],
+                ["6",".",".","1","9","5",".",".","."],
+                [".","9","8",".",".",".",".","6","."],
+                ["8",".",".",".","6",".",".",".","3"],
+                ["4",".",".","8",".","3",".",".","1"],
+                ["7",".",".",".","2",".",".",".","6"],
+                [".","6",".",".",".",".","2","8","."],
+                [".",".",".","4","1","9",".",".","5"],
+                [".",".",".",".","8",".",".","7","9"]
+            ],
+            False
         ),
 
-        # Example 3
+        # ===== Invalid: column conflict =====
         (
-            [1,3,5,6],
-            7,
-            4
+            [
+                ["5","3",".",".","7",".",".",".","."],
+                ["6","3",".","1","9","5",".",".","."],
+                [".","9","8",".",".",".",".","6","."],
+                ["8",".",".",".","6",".",".",".","3"],
+                ["4",".",".","8",".","3",".",".","1"],
+                ["7",".",".",".","2",".",".",".","6"],
+                [".","6",".",".",".",".","2","8","."],
+                [".",".",".","4","1","9",".",".","5"],
+                [".",".",".",".","8",".",".","7","9"]
+            ],
+            False
         ),
 
-        # ===== Additional cases =====
-
-        # Insert at beginning
+        # ===== Invalid: block conflict =====
         (
-            [1,3,5,6],
-            0,
-            0
-        ),
-
-        # Insert at end
-        (
-            [1,3,5,6],
-            10,
-            4
-        ),
-
-        # Single element - found
-        (
-            [5],
-            5,
-            0
-        ),
-
-        # Single element - insert before
-        (
-            [5],
-            2,
-            0
-        ),
-
-        # Single element - insert after
-        (
-            [5],
-            7,
-            1
-        ),
-
-        # Empty array
-        (
-            [],
-            3,
-            0
+            [
+                ["5","3",".",".","7",".",".",".","."],
+                ["6",".","3","1","9","5",".",".","."],
+                [".","9","8",".",".",".",".","6","."],
+                ["8",".",".",".","6",".",".",".","3"],
+                ["4",".",".","8",".","3",".",".","1"],
+                ["7",".",".",".","2",".",".",".","6"],
+                [".","6",".",".",".",".","2","8","."],
+                [".",".",".","4","1","9",".",".","5"],
+                [".",".",".",".","8",".",".","7","9"]
+            ],
+            False
         ),
     ]
 
-    for idx, (nums, target, expected) in enumerate(test_cases, 1):
+    for idx, (board, expected) in enumerate(test_cases, 1):
         print(f"\nTest {idx}")
-        print("Nums    :", nums)
-        print("Target  :", target)
-
-        result = solution.searchInsert(nums, target)
-
+        result = solution.isValidSudoku(board)
         print("Returned:", result)
         print("Expected:", expected)
-
         assert result == expected, "❌ WRONG ANSWER"
         print("✅ PASSED")
