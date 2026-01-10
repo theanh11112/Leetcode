@@ -1,116 +1,108 @@
+# =========================
+# 39. Combination Sum
+# =========================
+
 class Solution(object):
-    def isValidSudoku(self, board):
+    def combinationSum(self, candidates, target):
         """
-        :type board: List[List[str]]
-        :rtype: bool
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
         """
 
-        # TODO:
-        rows = [set() for _ in range(9)]
-        cols = [set() for _ in range(9)]
-        blocks = [[set() for _ in range(3)] for _ in range(3)]
+        result = []
+
+        # =========================
+        # TODO: WRITE YOUR LOGIC HERE
+        #
+        # Gợi ý (KHÔNG PHẢI CODE):
+        # - Dùng backtracking
+        # - Giữ start index
+        # - Khi target == 0 → append kết quả
+        # - Khi target < 0 → return
+        # =========================
         
-        for i in range(9) :
-            for j in range(9) :
-                val = board[i][j]
-                if val == "." :
+        def backtrack(start, path, remain):
+            if remain == 0 :
+                return result.append(path.copy())
+            
+            for i in range(start, len(candidates)):
+                
+                if candidates[i] > remain :
                     continue
-                
-                if val in rows[i]:
-                    return False
-                rows[i].add(val)
-                
-                if val in cols[j]:
-                    return False
-                cols[j].add(val)
-                
-                br = i // 3 
-                bc = j // 3 
-                if val in blocks[br][bc]:
-                    return False
-                blocks[br][bc].add(val)
-                
-        return True
-                
-                    
-                    
-                     
-        pass
+                path.append(candidates[i])
+                backtrack(i , path, remain - candidates[i])
+                path.pop()
+
+        backtrack(0, [], target)            
+            
+
+        return result
 
 
+# =========================
+# TEST CASES – COMBINATION SUM
+# =========================
 if __name__ == "__main__":
     solution = Solution()
 
     test_cases = [
-        # ===== Example 1: Valid Sudoku =====
+        # Example 1
         (
-            [
-                ["5","3",".",".","7",".",".",".","."],
-                ["6",".",".","1","9","5",".",".","."],
-                [".","9","8",".",".",".",".","6","."],
-                ["8",".",".",".","6",".",".",".","3"],
-                ["4",".",".","8",".","3",".",".","1"],
-                ["7",".",".",".","2",".",".",".","6"],
-                [".","6",".",".",".",".","2","8","."],
-                [".",".",".","4","1","9",".",".","5"],
-                [".",".",".",".","8",".",".","7","9"]
-            ],
-            True
+            [2, 3, 6, 7],
+            7,
+            [[2,2,3], [7]]
         ),
 
-        # ===== Example 2: Invalid Sudoku (row conflict) =====
+        # Example 2
         (
-            [
-                ["8","3",".",".","7",".",".",".","."],
-                ["6",".",".","1","9","5",".",".","."],
-                [".","9","8",".",".",".",".","6","."],
-                ["8",".",".",".","6",".",".",".","3"],
-                ["4",".",".","8",".","3",".",".","1"],
-                ["7",".",".",".","2",".",".",".","6"],
-                [".","6",".",".",".",".","2","8","."],
-                [".",".",".","4","1","9",".",".","5"],
-                [".",".",".",".","8",".",".","7","9"]
-            ],
-            False
+            [2, 3, 5],
+            8,
+            [[2,2,2,2], [2,3,3], [3,5]]
         ),
 
-        # ===== Invalid: column conflict =====
+        # Single candidate
         (
-            [
-                ["5","3",".",".","7",".",".",".","."],
-                ["6","3",".","1","9","5",".",".","."],
-                [".","9","8",".",".",".",".","6","."],
-                ["8",".",".",".","6",".",".",".","3"],
-                ["4",".",".","8",".","3",".",".","1"],
-                ["7",".",".",".","2",".",".",".","6"],
-                [".","6",".",".",".",".","2","8","."],
-                [".",".",".","4","1","9",".",".","5"],
-                [".",".",".",".","8",".",".","7","9"]
-            ],
-            False
+            [2],
+            1,
+            []
         ),
 
-        # ===== Invalid: block conflict =====
+        # Exact match
         (
-            [
-                ["5","3",".",".","7",".",".",".","."],
-                ["6",".","3","1","9","5",".",".","."],
-                [".","9","8",".",".",".",".","6","."],
-                ["8",".",".",".","6",".",".",".","3"],
-                ["4",".",".","8",".","3",".",".","1"],
-                ["7",".",".",".","2",".",".",".","6"],
-                [".","6",".",".",".",".","2","8","."],
-                [".",".",".","4","1","9",".",".","5"],
-                [".",".",".",".","8",".",".","7","9"]
-            ],
-            False
+            [1],
+            1,
+            [[1]]
+        ),
+
+        # Multiple combinations
+        (
+            [2, 3],
+            6,
+            [[2,2,2], [3,3]]
+        ),
+
+        # No solution
+        (
+            [5, 10],
+            3,
+            []
         ),
     ]
 
-    for idx, (board, expected) in enumerate(test_cases, 1):
+    for idx, (candidates, target, expected) in enumerate(test_cases, 1):
         print(f"\nTest {idx}")
-        result = solution.isValidSudoku(board)
-        print("Returned:", result)
-        print("Expected:", expected)
-        assert result == expected, "❌ WRONG ANSWER"
+        print("Candidates:", candidates)
+        print("Target    :", target)
+
+        result = solution.combinationSum(candidates, target)
+
+        # sort để so sánh không phụ thuộc thứ tự
+        result_sorted = sorted([sorted(r) for r in result])
+        expected_sorted = sorted([sorted(e) for e in expected])
+
+        print("Returned  :", result_sorted)
+        print("Expected  :", expected_sorted)
+
+        assert result_sorted == expected_sorted, "❌ WRONG ANSWER"
         print("✅ PASSED")
