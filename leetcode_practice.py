@@ -1,113 +1,87 @@
 # =========================
-# 41. First Missing Positive
+# 43. Multiply Strings
 # =========================
 
 class Solution(object):
-    def firstMissingPositive(self, nums):
+    def multiply(self, num1, num2):
         """
-        :type nums: List[int]
-        :rtype: int
+        :type num1: str
+        :type num2: str
+        :rtype: str
         """
 
         # =========================
         # TODO: WRITE YOUR LOGIC HERE
         #
-        # Yêu cầu bắt buộc:
-        # - Time: O(n)
-        # - Space: O(1)
-        # - Không dùng set / map / array phụ
-        # - Không sort
+        # Yêu cầu:
+        # - Không convert toàn bộ string sang int
+        # - Không dùng BigInteger
+        # - Time: O(m * n)
+        # - Space: O(m + n)
         #
-        # Gợi ý tư duy (KHÔNG PHẢI CODE):
-        # - Mỗi số x (1 ≤ x ≤ n) có "ghế" tại index x-1
-        # - Đưa số về đúng ghế nếu có thể
-        # - Sau đó duyệt tìm ghế trống đầu tiên
+        # Gợi ý tư duy:
+        # - Tạo mảng kết quả size m + n
+        # - Nhân từng chữ số từ phải sang trái
+        # - Đặt vào vị trí i + j + 1
+        # - Xử lý carry
+        # - Xoá số 0 đầu nếu có
         # =========================
         
-        i = 0 
-        n = len(nums)
+        if num1 == "0" or num2 == "0":
+            return "0"
         
-        while i < n:
-            x = nums[i]
+        m = len(num1)
+        n = len(num2)
+        
+        result = [0] * (m +n)
+        
+        for i in range(m-1, -1, -1):
+            for j in range(n-1, -1 , -1):
+                mul = int(num1[i]) * int(num2[j])
+                sum_val = mul + result[i + j + 1]
+                
+                result[i + j + 1] = sum_val % 10
+                result [i + j ] += sum_val // 10
             
-            if 1 <= x <= n and x != nums[x - 1]:
-                nums[i] , nums[x - 1] = nums[x - 1], nums[i]
-            else: 
-                i += 1
-                  
+        if result[0] == 0:
+            result.pop(0)
 
-        for i in range (len(nums)):
-            if nums[i] != i + 1 :
-                return i + 1 
-        return len(nums) + 1 
-                 
+        return ''.join(map(str, result))
 
 
 # =========================
-# TEST CASES – FIRST MISSING POSITIVE
+# TEST CASES – MULTIPLY STRINGS
 # =========================
 if __name__ == "__main__":
     solution = Solution()
 
     test_cases = [
-        # Basic cases
-        (
-            [1, 2, 0],
-            3
-        ),
-        (
-            [3, 4, -1, 1],
-            2
-        ),
-        (
-            [7, 8, 9, 11, 12],
-            1
-        ),
+        # Basic
+        ("2", "3", "6"),
+        ("123", "456", "56088"),
+
+        # Zero cases
+        ("0", "12345", "0"),
+        ("999", "0", "0"),
+
+        # Different lengths
+        ("12", "10", "120"),
+        ("100", "100", "10000"),
+
+        # Large digits
+        ("999", "999", "998001"),
+        ("123456789", "9", "1111111101"),
 
         # Edge cases
-        (
-            [1],
-            2
-        ),
-        (
-            [2],
-            1
-        ),
-        (
-            [],
-            1
-        ),
-
-        # Duplicates
-        (
-            [1, 1],
-            2
-        ),
-        (
-            [2, 2],
-            1
-        ),
-
-        # Mixed
-        (
-            [2, 1],
-            3
-        ),
-        (
-            [0, -1, 3, 1],
-            2
-        ),
-        (
-            [1, 2, 3],
-            4
-        ),
+        ("1", "1", "1"),
+        ("1", "99999", "99999"),
     ]
 
-    for idx, (nums, expected) in enumerate(test_cases, 1):
+    for idx, (num1, num2, expected) in enumerate(test_cases, 1):
         print(f"\nTest {idx}")
-        print("Input     :", nums)
+        print("Input     :", num1, num2)
 
-        result = solution.firstMissingPositive(nums[:])  # copy để tránh side-effect
+        result = solution.multiply(num1, num2)
 
         print("Returned  :", result)
         print("Expected  :", expected)
